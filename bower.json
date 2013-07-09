@@ -1,0 +1,8 @@
+{
+    "name": "simple-accordion",
+    "version": "0.0.1",
+    "main": "simple_accordion.js",
+    "dependencies": {
+        "jquery": "1.8.x"
+    }
+}
