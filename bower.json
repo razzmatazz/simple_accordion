@@ -1,8 +1,8 @@
 {
-    "name": "simple-accordion",
-    "version": "0.0.2",
-    "main": "simple-accordion.js",
-    "dependencies": {
-        "jquery": "1.7.x+"
-    }
+  "name": "simple-accordion",
+  "version": "0.0.3",
+  "main": "simple-accordion.js",
+  "dependencies": {
+    "jquery": ">=1.7"
+  }
 }
