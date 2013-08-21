@@ -1,6 +1,6 @@
 {
   "name": "simple-accordion",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "simple-accordion.js",
   "dependencies": {
     "jquery": ">=1.7"

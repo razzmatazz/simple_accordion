@@ -4,7 +4,7 @@
  * JQuery plugin for a simple accordion.
  *
  * @name jQuery Simple Accordion
- * @version 0.1.0
+ * @version 0.0.4
  * @requires jQuery v1.7+
  * @author Saulius Menkevicius
  */
@@ -26,9 +26,9 @@
   defaults = {
     cssClass: {
       accordion: cssClassPrefix,
-      item: cssClassPrefix + '-item',
-      itemToggle: cssClassPrefix + '-item-toggle',
-      open: cssClassPrefix + '-item-open'
+      section: cssClassPrefix + '-section',
+      sectionHeader: cssClassPrefix + '-section-header',
+      sectionIsOpen: cssClassPrefix + '-section-is-open'
     }
   };
 
@@ -74,61 +74,37 @@
      * Initializes plugin.
      */
     init: function () {
-      var plugin = this;
+      var $sectionHeaders;
 
-      this.$items = this.$element.find('.' + this.options.cssClass.item);
-      this.$itemToggles = this.$element.find('.' + this.options.cssClass.itemToggle);
+      this.$sections = this.$element.find('.' + this.options.cssClass.section);
 
-      $.each(this.$itemToggles, function (index, itemElem) {
-        $(itemElem).data(dataNameForItemIndex, index);
-      });
+      // handle the click event on accordion section headers
+      $sectionHeaders = this.$element.find('.' + this.options.cssClass.sectionHeader);
+      $sectionHeaders.on('click tap vclick', this._onSectionHeaderClick.bind(this));
 
-      // handle the click event on accordion items
-      this.$itemToggles.on('click tap vclick', function (event) {
-        var toggleItemIndex = $(this).data(dataNameForItemIndex);
+      // open the first section on init
+      this.$sections.first().addClass(this.options.cssClass.sectionIsOpen);
+    },
 
-        event.preventDefault();
+    _onSectionHeaderClick: function (event) {
+      var plugin = this,
+          $parentSection = $(event.target).parent(),
+          currentSectionIsOpen = $parentSection.hasClass(plugin.options.cssClass.sectionIsOpen);
 
-        if (toggleItemIndex !== undefined) {
-          plugin._toggleItem(toggleItemIndex);
-        }
-      });
+      event.preventDefault();
 
-      this._toggleItem(0);
+      if (currentSectionIsOpen) {
+        $parentSection.removeClass(plugin.options.cssClass.sectionIsOpen);
+      } else {
+        $parentSection.siblings().removeClass(plugin.options.cssClass.sectionIsOpen);
+        $parentSection.addClass(plugin.options.cssClass.sectionIsOpen);
+      }
     },
 
     destroy: function () {
-      this.$itemToggles.removeData(dataNameForItemIndex);
-
-      this.$items.removeClass(this.options.cssClass.open);
+      this.$sections.removeClass(this.options.cssClass.sectionIsOpen);
 
       this.$element.removeData(pluginName);
-    },
-
-    _toggleItem: function (itemNum) {
-      var openClass = this.options.cssClass.open,
-          $item,
-          $itemToggle,
-          itemWasOpen;
-
-      $item = $(this.$items[itemNum]);
-      if (!$item) {
-        return;
-      }
-
-      itemWasOpen = $item.hasClass(openClass);
-
-      this.$items.removeClass(openClass);
-
-      $itemToggle = $item.find('.' + this.options.cssClass.itemToggle);
-
-      if (itemWasOpen) {
-        $item.removeClass(openClass);
-        $itemToggle.removeClass(openClass);
-      } else {
-        $item.addClass(openClass);
-        $itemToggle.addClass(openClass);
-      }
     }
   };
 }));
